@@ -19,26 +19,6 @@ def extract_docs(comp_name,cik):
 
 print('a')
 
-#Development corpus
-
-
-#working on creating a sector class that appends all the docs and perhaps finalizes them for me
-""""
-class Sector():
-	def __init__(self,docs):
-		self.docs = docs
-
-	def generate_sector(docs):
-		sec = []
-		for i in range(docs):
-			comp = input("enter a company")
-			cik = input("enter the companies' cik")
-			sec.append(extract_docs)
-"""
-
-
-
-
 
 #IT
 itdoc1 = (extract_docs("APPLE INC", "0000320193"))
@@ -94,7 +74,6 @@ def stem_words(words_list, stemmer):
 def stemmed_doc(text):
     tokens = nltk.word_tokenize(text)
     stems = stem_words(tokens, stemmer)
-
     stemmed = ""
     for i in stems:
     	stemmed += i + " "
@@ -104,12 +83,9 @@ def stemmed_doc(text):
 def finalize_doc(doc):
 	part1 = clean_doc(doc)
 	part2 = stemmed_doc(part1)
-	#part2 = stem_words(part1, stemmer)
 	return part2
 
 
-
-#building development set
 it_documents = [finalize_doc(itdoc1),finalize_doc(itdoc2),finalize_doc(itdoc3),finalize_doc(itdoc4)]
 bio_documents = [finalize_doc(biodoc1),finalize_doc(biodoc2),finalize_doc(biodoc3),finalize_doc(biodoc4)]
 finance_documents = [finalize_doc(findoc1),finalize_doc(findoc2),finalize_doc(findoc3),finalize_doc(findoc4)]
@@ -159,8 +135,6 @@ def tfidf(documents):
         tfidf_documents.append(doc_tfidf)
     return tfidf_documents
 
-
-
 def cosine_similarity(vector1, vector2):
     dot_product = sum(p*q for p,q in zip(vector1, vector2))
     magnitude = math.sqrt(sum([val**2 for val in vector1])) * math.sqrt(sum([val**2 for val in vector2]))
@@ -168,24 +142,6 @@ def cosine_similarity(vector1, vector2):
         return 0
     return dot_product/magnitude
 
-
-
-#Asking user for a company that they want to check
-#user_company = input("Please input the name of a company you would like to check as it would appear on sec.gov ")
-#user_cik = input("Please input the corresponding CIK# of that company ")
-
-#Training Corpus
-"""
-train_doc = extract_docs("Oracle Corp", "0001341439")
-train_sector = ""
-train_doc2 = extract_docs("MERCK & CO., INC.", "0000310158")
-train_doc3 = extract_docs("FACEBOOK INC", "0001326801")
-train_doc4 = extract_docs("WELLS FARGO & COMPANY", "0000072971")
-train_doc5 = extract_docs("Phillips 66", "0001534701")
-train_doc6 = extract_docs("CHIPOTLE MEXICAN GRILL", "0001058090")
-train_doc7 = extract_docs("BlackRock Inc.", "0001364742")
-"""
-#((user_company,user_cik)
 
 #Test Corpus
 test_doc1 = extract_docs("FACEBOOK INC","0001326801")
@@ -196,13 +152,9 @@ test_doc5 = extract_docs("NIKE INC", "0000320187")
 test_doc6 = extract_docs("AMAZON COM INC", "0001018724")
 
 
-# 0 = it, 1 = bio, 2 = finance, 3 = energy, 4 = consumer discretionary
-
 similarities = {"technology":[],"biopharmaceuticals":[],"finance":[],"energy":[],"consumer_discretionary":[]}
 
 
-#5 sectors total
-#3 docs in each sector for testing plus 1 test doc
 def generate_cosine_similarities(doc,development_docs,similarity):
   #test, change all run_docs back to development docs
 	run_docs = development_docs.copy()
