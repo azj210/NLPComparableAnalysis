@@ -119,7 +119,6 @@ consumerdisc_documents= [finalize_doc(cddoc1),finalize_doc(cddoc2),finalize_doc(
 development_docs = [it_documents,bio_documents,finance_documents,energy_documents,consumerdisc_documents]
 
 
-#Part below taken from github to calculate tf-idf
 tokenize = lambda doc: doc.lower().split(" ")
 
 def jaccard_similarity(query, document):
@@ -168,7 +167,7 @@ def cosine_similarity(vector1, vector2):
     if not magnitude:
         return 0
     return dot_product/magnitude
-#end part taken directly from github
+
 
 
 #Asking user for a company that they want to check
@@ -205,60 +204,37 @@ similarities = {"technology":[],"biopharmaceuticals":[],"finance":[],"energy":[]
 #5 sectors total
 #3 docs in each sector for testing plus 1 test doc
 def generate_cosine_similarities(doc,development_docs,similarity):
+  #test, change all run_docs back to development docs
+	run_docs = development_docs.copy()
 	finalized_doc = finalize_doc(doc)
-
-	for i in range(len(development_docs)):
-		development_docs[i].append(finalized_doc)
-	"""
-	it_documents.append(finalized_doc)
-	bio_documents.append(finalized_doc)
-	finance_documents.append(finalized_doc)
-	energy_documents.append(finalized_doc)
-	consumerdisc_documents.append(finalized_doc)
-	"""
-
-	for i in range(len(development_docs)):
-		temp_tfidf = tfidf(development_docs[i])
+	#add test doc in for testing
+	for i in range(len(run_docs)):
+		run_docs[i].append(finalized_doc)
+	#tfidf vectorization
+	for i in range(len(run_docs)):
+		temp_tfidf = tfidf(run_docs[i])
 		average_cosim = 0
-		for j in range(4):
-			hold = cosine_similarity(temp_tfidf[j],temp_tfidf[4])
+		for j in range(docsPerSector):
+			hold = cosine_similarity(temp_tfidf[j],temp_tfidf[docsPerSector])
 			average_cosim += hold
-			if i == 0:
-				similarity["technology"].append(hold)
-			if i == 1:
-				similarity["biopharmaceuticals"].append(hold)
-			if i == 2:
-				similarity["finance"].append(hold)
-			if i == 3:
-				similarity["energy"].append(hold)
-			if i == 4:
-				similarity["consumer_discretionary"].append(hold)
-			#print(hold)
-		if i == 0:
-			similarity["technology"].append(average_cosim/4)
-		if i == 1:
-			similarity["biopharmaceuticals"].append(average_cosim/4)
-		if i == 2:
-			similarity["finance"].append(average_cosim/4)
-		if i == 3:
-			similarity["energy"].append(average_cosim/4)
-		if i == 4:
-			similarity["consumer_discretionary"].append(average_cosim/4)
+			similarity[sim_list[i]].append(hold)
+		similarity[sim_list[i]].append(average_cosim/docsPerSector)
 
 def sector_ranking(sims):
+	#tracking the sector with most similarity
 	greatest = [0, 0]
 	for i in sims.keys():
-		if sims[i][4] > greatest[1]:
+		if sims[i][docsPerSector] > greatest[1]:
 			greatest[0] = i
-			greatest[1] = sims[i][4]
-		print(i,sims[i])
-	#similarity = {"technology":[],"biopharmaceuticals":[],"finance":[],"energy":[],"consumer_discretionary":[]}
+			greatest[1] = sims[i][docsPerSector]
+	#clear dictionary
+	sims = sims.fromkeys(sims,[])
 	return greatest
 
 def gen_output(td,d,s):
-	#similarities = {"technology":[],"biopharmaceuticals":[],"finance":[],"energy":[],"consumer_discretionary":[]}
-	#development_docs = [i,b,f,e,c]
 	generate_cosine_similarities(td,d,s)
+	#display entire dictionary of similarities
+	print(s)
 	return(sector_ranking(s))
 
 
