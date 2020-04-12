@@ -20,36 +20,14 @@ def extract_docs(comp_name,cik):
 print('a')
 
 
-#IT
-itdoc1 = (extract_docs("APPLE INC", "0000320193"))
-itdoc2 = (extract_docs("MICROSOFT CORPORATION", "0000789019"))
-itdoc3 = (extract_docs("INTERNATIONAL BUSINESS MACHINES CORP", "0000051143"))
-itdoc4 = (extract_docs("Oracle Corp", "0001341439"))
+#initial set
+it_documents = [finalize_doc(extract_docs("APPLE INC", "0000320193")),finalize_doc(extract_docs("MICROSOFT CORPORATION", "0000789019")),finalize_doc(extract_docs("INTERNATIONAL BUSINESS MACHINES CORP", "0000051143")),finalize_doc(extract_docs("Oracle Corp", "0001341439")),finalize_doc(extract_docs("INTERNATIONAL BUSINESS MACHINES CORP", "0000051143"))]
+bio_documents = [finalize_doc(extract_docs("PFIZER INC", "0000078003")),finalize_doc(extract_docs("JOHNSON & JOHNSON", "0000200406")),finalize_doc(extract_docs("Biogen Inc.", "0000875045")),finalize_doc(extract_docs("MERCK & CO., INC.", "0000310158")),finalize_doc(extract_docs("BAXTER INTERNATIONAL INC", "0000010456"))]
+finance_documents = [finalize_doc(extract_docs("CITIGROUP INC", "0000831001")),finalize_doc(extract_docs("GOLDMAN SACHS GROUP INC", "0000886982")),finalize_doc(extract_docs("WELLS FARGO & COMPANY", "0000072971")),finalize_doc(extract_docs("BlackRock Inc.", "0001364742")),finalize_doc(extract_docs("AMERICAN INTERNATIONAL GROUP Inc", "0000005272"))]
+energy_documents = [finalize_doc(extract_docs("EXXON MOBIL CORP", "0000034088")),finalize_doc(extract_docs("CHEVRON CORP", "0000093410")),finalize_doc(extract_docs("ENTERPRISE PRODUCTS PARTNERS L P", "0001061219")),finalize_doc(extract_docs("Phillips 66", "0001534701")),finalize_doc(extract_docs("DEVON ENERGY CORP/DE", "0001090012"))]
+consumerdisc_documents = [finalize_doc(extract_docs("STARBUCKS CORP", "0000829224")),finalize_doc(extract_docs("Target Corp", "0000027419")),finalize_doc(extract_docs("Marriott International Inc", "0001048286")),finalize_doc(extract_docs("CHIPOTLE MEXICAN GRILL", "0001058090")),finalize_doc(extract_docs("NORDSTROM INC", "0000072333"))]
+manufacturing_documents = [finalize_doc(extract_docs("General Motors Co", "0001467858")),finalize_doc(extract_docs("LOCKHEED MARTIN CORP", "0000936468")),finalize_doc(extract_docs("CATERPILLAR INC", "0000018230")),finalize_doc(extract_docs("FORD MOTOR CO", "0000037996")),finalize_doc(extract_docs("RELIANCE STEEL & ALUMINUM CO", "0000861884"))]
 
-#Biopharmaceuticals
-biodoc1 = (extract_docs("PFIZER INC", "0000078003"))
-biodoc2 = (extract_docs("JOHNSON & JOHNSON", "0000200406"))
-biodoc3 = (extract_docs("Biogen Inc.", "0000875045"))
-biodoc4 = (extract_docs("MERCK & CO., INC.", "0000310158"))
-
-#Finance
-findoc1 = (extract_docs("CITIGROUP INC", "0000831001"))
-findoc2 = (extract_docs("GOLDMAN SACHS GROUP INC", "0000886982"))
-#findoc3 = (extract_docs("American Express Co", "0000004962"))
-findoc3 = (extract_docs("WELLS FARGO & COMPANY", "0000072971"))
-findoc4 = (extract_docs("BlackRock Inc.", "0001364742"))
-
-#Energy
-edoc1 = (extract_docs("EXXON MOBIL CORP", "0000034088"))
-edoc2 = (extract_docs("CHEVRON CORP", "0000093410"))
-edoc3 = (extract_docs("ENTERPRISE PRODUCTS PARTNERS L P", "0001061219"))
-edoc4 = (extract_docs("Phillips 66", "0001534701"))
-
-#Consumer Discretionary
-cddoc1 = (extract_docs("General Motors Co", "0001467858"))
-cddoc2 = (extract_docs("Target Corp", "0000027419"))
-cddoc3 = (extract_docs("Marriott International Inc", "0001048286"))
-cddoc4 = (extract_docs("CHIPOTLE MEXICAN GRILL", "0001058090"))
 
 
 #cleaning thet document to retain only the first half and to keep a unified format for all documents
@@ -85,14 +63,6 @@ def finalize_doc(doc):
 	part2 = stemmed_doc(part1)
 	return part2
 
-
-it_documents = [finalize_doc(itdoc1),finalize_doc(itdoc2),finalize_doc(itdoc3),finalize_doc(itdoc4)]
-bio_documents = [finalize_doc(biodoc1),finalize_doc(biodoc2),finalize_doc(biodoc3),finalize_doc(biodoc4)]
-finance_documents = [finalize_doc(findoc1),finalize_doc(findoc2),finalize_doc(findoc3),finalize_doc(findoc4)]
-energy_documents = [finalize_doc(edoc1),finalize_doc(edoc2),finalize_doc(edoc3),finalize_doc(edoc4)]
-consumerdisc_documents= [finalize_doc(cddoc1),finalize_doc(cddoc2),finalize_doc(cddoc3),finalize_doc(cddoc4)]
-
-development_docs = [it_documents,bio_documents,finance_documents,energy_documents,consumerdisc_documents]
 
 
 tokenize = lambda doc: doc.lower().split(" ")
@@ -143,16 +113,18 @@ def cosine_similarity(vector1, vector2):
     return dot_product/magnitude
 
 
-#Test Corpus
-test_doc1 = extract_docs("FACEBOOK INC","0001326801")
-test_doc2 = extract_docs("LILLY ELI & CO", "0000059478")
-test_doc3 = extract_docs("SVB FINANCIAL GROUP", "0000719739")
-test_doc4 = extract_docs("VALERO ENERGY CORP/TX", "0001035002")
-test_doc5 = extract_docs("NIKE INC", "0000320187")
-test_doc6 = extract_docs("AMAZON COM INC", "0001018724")
+#development set
+it_Dev = [finalize_doc(extract_docs("FACEBOOK INC","0001326801")), finalize_doc(extract_docs("INTEL CORP", "0000050863")), finalize_doc(extract_docs("CISCO SYSTEMS", "0000858877"))]
+bio_Dev = [finalize_doc(extract_docs("LILLY ELI & CO", "0000059478")), finalize_doc(extract_docs("AbbVie Inc.", "0001551152")), finalize_doc(extract_docs("THERMO FISHER SCIENTIFIC INC.", "0000097745"))]
+finance_Dev = [finalize_doc(extract_docs("SVB FINANCIAL GROUP", "0000719739")),  finalize_doc(extract_docs("JPMORGAN CHASE & CO", "0000019617")), finalize_doc(extract_docs("BANK OF AMERICA CORP /DE/", "0000070858"))]
+energy_Dev = [finalize_doc(extract_docs("VALERO ENERGY CORP/TX", "0001035002")), finalize_doc(extract_docs("EOG RESOURCES INC", "0000821189")), finalize_doc(extract_docs("OCCIDENTAL PETROLEUM CORP /DE/", "0000797468"))]
+consumerdisc_Dev = [finalize_doc(extract_docs("NIKE INC", "0000320187")), finalize_doc(extract_docs("TJX COMPANIES INC /DE/", "0000109198")), finalize_doc(extract_docs("MCDONALDS CORP", "0000063908"))]      
 
+development_docs = [it_documents + it_Dev, bio_documents + bio_Dev, finance_documents + finance_Dev, energy_documents + energy_Dev, consumerdisc_documents + consumerdisc_Dev]
+docsPerSector = len(development_docs[0])
 
-similarities = {"technology":[],"biopharmaceuticals":[],"finance":[],"energy":[],"consumer_discretionary":[]}
+similarities = {"technology":[],"biopharmaceuticals":[],"finance":[],"energy":[],"consumer_discretionary":[], "manufacturing":[]}
+sim_list = list(similarities.keys())
 
 
 def generate_cosine_similarities(doc,development_docs,similarity):
@@ -190,27 +162,9 @@ def gen_output(td,d,s):
 	return(sector_ranking(s))
 
 
-#facebook  = gen_output(test_doc1,development_docs,similarities)
-#print(facebook)
-
-
-#eli_lilly  = gen_output(test_doc2,development_docs,similarities)
-#print(eli_lilly)
-
-
-#svb = gen_output(test_doc3,development_docs,similarities)
-#print(svb)
-
-
-#valero = gen_output(test_doc4,development_docs,similarities)
-#print(valero)
-
-#nike = gen_output(test_doc5,development_docs,similarities)
-#print(nike)
-
-#amazon = gen_output(test_doc6, development_docs, similarities)
-#print(amazon)
-
+print(gen_output(extract_docs("AMAZON COM INC", "0001018724"), development_docs, similarities))
+print(gen_output(extract_docs("ADOBE INC.", "0000796343"), development_docs, similarities))
+print(gen_output(extract_docs("Lyft, Inc.", "0001759509"), development_docs, similarities))
 
 
 
