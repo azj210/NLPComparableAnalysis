@@ -8,7 +8,7 @@ I started by extracting documents from SEC's edgar database. It should be noted 
 
 Next I cleaned the documents. I only took half of each 10-K filing since company business operations, financial data, and risk measures are outlined within the first few sections of the document. The latter half of document usually only contains information pertinent to executive compensation and corporation structure. By eliminating the unnecessary parts of documents, I found more accurate results and faster processing time for tf-idf vectorization and cosine similarity.
 
-In terms of cleaning the documents, I made sure to 1. only take alphabeticals characters 2. make all words lower case 3. eliminate stop words 4. use PorterStemmer to take the stem form of all words. 
+In terms of cleaning the documents, I made sure to 1. only take alphabeticals characters 2. make all words lower case 3. eliminate stop words 4. use nltk Word_Tokensize to eliminate contractions and white spaces 5. use nltk PorterStemmer to take the stem form of all words. 
 
 I used 6 sectors in my analysis: Information Technology, Biopharmaceuticals, Financial Services, Energy, Consumer Discretionary, and Manufacturing.
 
