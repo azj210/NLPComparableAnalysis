@@ -3,6 +3,7 @@ File cleaning and extraction of SEC 10-k filings followed by TF-IDF and Cosine S
 Credit for Edgar SEC 10-k extraction code, edgar.py: https://github.com/joeyism/py-edgar 
 
 **Overview of Main.py**
+
 I started by extracting documents from SEC's edgar database. It should be noted that noOfDocuments is set to 2 because of all company filings in SEC's database, some files are not 10-k filings. While is is not gauranteed that the first filing extracted is the 10-k filings, it can be gauranteed that 10-k files can be found within the first 2 documents.
 
 Next I cleaned the documents. I only took half of each 10-K filing since company business operations, financial data, and risk measures are outlined within the first few sections of the document. The latter half of document usually only contains information pertinent to executive compensation and corporation structure. By eliminating the unnecessary parts of documents, I found more accurate results and faster processing time for tf-idf vectorization and cosine similarity.
