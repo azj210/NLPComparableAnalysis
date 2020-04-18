@@ -11,13 +11,11 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
 import copy
 
-print("a")
-
 #Obtaining SEC docs
 def extract_docs(comp_name,cik):
 	company = edgar.Company(comp_name, cik)
 	tree = company.getAllFilings(filingType = "10-K")
-	docs = edgar.getDocuments(tree, noOfDocuments=2)
+	docs = edgar.getDocuments(tree, noOfDocuments=3)
 	if ("This application relies heavily on JavaScript, you" in docs[0]):
 		return docs[1]
 	else:
@@ -58,7 +56,7 @@ def finalize_doc(doc):
 	return part2
 
 
-#initial set
+#training set
 it_documents = [finalize_doc(extract_docs("APPLE INC", "0000320193")),finalize_doc(extract_docs("MICROSOFT CORPORATION", "0000789019")),finalize_doc(extract_docs("INTERNATIONAL BUSINESS MACHINES CORP", "0000051143")),finalize_doc(extract_docs("Oracle Corp", "0001341439")),finalize_doc(extract_docs("INTERNATIONAL BUSINESS MACHINES CORP", "0000051143"))]
 bio_documents = [finalize_doc(extract_docs("PFIZER INC", "0000078003")),finalize_doc(extract_docs("JOHNSON & JOHNSON", "0000200406")),finalize_doc(extract_docs("Biogen Inc.", "0000875045")),finalize_doc(extract_docs("MERCK & CO., INC.", "0000310158")),finalize_doc(extract_docs("BAXTER INTERNATIONAL INC", "0000010456"))]
 finance_documents = [finalize_doc(extract_docs("CITIGROUP INC", "0000831001")),finalize_doc(extract_docs("GOLDMAN SACHS GROUP INC", "0000886982")),finalize_doc(extract_docs("WELLS FARGO & COMPANY", "0000072971")),finalize_doc(extract_docs("BlackRock Inc.", "0001364742")),finalize_doc(extract_docs("AMERICAN INTERNATIONAL GROUP Inc", "0000005272"))]
@@ -82,10 +80,6 @@ def sublinear_term_frequency(term, tokenized_document):
 	if count == 0:
 		return 0
 	return 1 + math.log(count)
-
-def augmented_term_frequency(term, tokenized_document):
-	max_count = max([term_frequency(t, tokenized_document) for t in tokenized_document])
-	return (0.5 + ((0.5 * term_frequency(term, tokenized_document))/max_count))
 
 def inverse_document_frequencies(tokenized_documents):
 	idf_values = {}
@@ -168,7 +162,7 @@ def gen_output(td,d,s):
 	print(sim)
 	return(sector_ranking(sim))
 
-
+#test set
 """
 print(gen_output(extract_docs("Booking Holdings Inc.", "0001075531"), development_docs, similarities))
 print(gen_output(extract_docs("AMAZON COM INC", "0001018724"), development_docs, similarities))
@@ -183,9 +177,12 @@ print(gen_output(extract_docs("HESS CORP", "0000004447"), development_docs, simi
 print(gen_output(extract_docs("SOUTHERN CO", "0000092122"), development_docs, similarities))
 print(gen_output(extract_docs("NORTHROP GRUMMAN CORP /DE/", "0001133421"), development_docs, similarities))
 print(gen_output(extract_docs("Workday, Inc.", "0001327811"), development_docs, similarities))
+print(gen_output(extract_docs("PayPal Holdings, Inc.", "0001633917"), development_docs, similarities))
+print(gen_output(extract_docs("Mastercard Inc", "0001141391"), development_docs, similarities))
+print(gen_output(extract_docs("BLACKLINE, INC.", "0001666134"), development_docs, similarities))
 print(gen_output(extract_docs("HTIFFANY & CO", "0000098246"), development_docs, similarities))
 print(gen_output(extract_docs("Macy's, Inc.", "0000794367"), development_docs, similarities))
+print(gen_output(extract_docs("Blackstone Group Inc", "0001393818"), development_docs, similarities))
+print(gen_output(extract_docs("Catalent, Inc.", "0001596783"), development_docs, similarities))
 """
-print("b")
-
 
