@@ -180,7 +180,9 @@ print(gen_output(extract_docs("Cellular Biomedicine Group, Inc.", "0001378624"),
 print(gen_output(extract_docs("AMERICAN EXPRESS CO", "0000004962"), development_docs, similarities))
 print(gen_output(extract_docs("MORGAN STANLEY", "0000895421"), development_docs, similarities))
 print(gen_output(extract_docs("HESS CORP", "0000004447"), development_docs, similarities))
+print(gen_output(extract_docs("SOUTHERN CO", "0000092122"), development_docs, similarities))
 print(gen_output(extract_docs("NORTHROP GRUMMAN CORP /DE/", "0001133421"), development_docs, similarities))
+print(gen_output(extract_docs("Workday, Inc.", "0001327811"), development_docs, similarities))
 print(gen_output(extract_docs("HTIFFANY & CO", "0000098246"), development_docs, similarities))
 print(gen_output(extract_docs("Macy's, Inc.", "0000794367"), development_docs, similarities))
 """
