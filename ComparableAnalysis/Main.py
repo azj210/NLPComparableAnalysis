@@ -134,20 +134,22 @@ sim_list = list(similarities.keys())
 #8 docs in each sector 
 def generate_cosine_similarities(doc,development_docs,similarity):
   #test, change all run_docs back to development docs
-	run_docs = development_docs.copy()
-	finalized_doc = finalize_doc(doc)
+    run_docs = copy.deepcopy(development_docs)
+    simCopy = copy.deepcopy(similarity)
+    finalized_doc = finalize_doc(doc)
 	#add test doc in for testing
-	for i in range(len(run_docs)):
-		run_docs[i].append(finalized_doc)
+    for i in range(len(run_docs)):
+        run_docs[i].append(finalized_doc)
 	#tfidf vectorization
-	for i in range(len(run_docs)):
-		temp_tfidf = tfidf(run_docs[i])
-		average_cosim = 0
-		for j in range(docsPerSector):
-			hold = cosine_similarity(temp_tfidf[j],temp_tfidf[docsPerSector])
-			average_cosim += hold
-			similarity[sim_list[i]].append(hold)
-		similarity[sim_list[i]].append(average_cosim/docsPerSector)
+    for i in range(len(run_docs)):
+        temp_tfidf = tfidf(run_docs[i])
+        average_cosim = 0
+        for j in range(docsPerSector):
+            hold = cosine_similarity(temp_tfidf[j],temp_tfidf[docsPerSector])
+            average_cosim += hold
+            simCopy[sim_list[i]].append(hold)
+        simCopy[sim_list[i]].append(average_cosim/docsPerSector)
+    return simCopy
 
 def sector_ranking(sims):
 	#tracking the sector with most similarity
@@ -161,44 +163,29 @@ def sector_ranking(sims):
 	return greatest
 
 def gen_output(td,d,s):
-	generate_cosine_similarities(td,d,s)
+	sim = generate_cosine_similarities(td,d,s)
 	#display entire dictionary of similarities
-	print(s)
-	return(sector_ranking(s))
+	print(sim)
+	return(sector_ranking(sim))
 
 
-
+"""
+print(gen_output(extract_docs("Booking Holdings Inc.", "0001075531"), development_docs, similarities))
 print(gen_output(extract_docs("AMAZON COM INC", "0001018724"), development_docs, similarities))
-print("a")
 print(gen_output(extract_docs("ADOBE INC.", "0000796343"), development_docs, similarities))
-print("a")
-print(gen_output(extract_docs("Lyft, Inc.", "0001759509"), development_docs, similarities))
-print("a")
 print(gen_output(extract_docs("Tesla, Inc.", "0001318605"), development_docs, similarities))
-print("a")
 print(gen_output(extract_docs("Q2 Holdings, Inc.", "0001410384"), development_docs, similarities))
-print("a")
 print(gen_output(extract_docs("MCKESSON CORP", "0000927653"), development_docs, similarities))
-print("a")
 print(gen_output(extract_docs("Cellular Biomedicine Group, Inc.", "0001378624"), development_docs, similarities))
-print("a")
 print(gen_output(extract_docs("AMERICAN EXPRESS CO", "0000004962"), development_docs, similarities))
-print("a")
 print(gen_output(extract_docs("MORGAN STANLEY", "0000895421"), development_docs, similarities))
-print("a")
 print(gen_output(extract_docs("HESS CORP", "0000004447"), development_docs, similarities))
-print("a")
-print(gen_output(extract_docs("Uber Technologies, Inc", "0001543151"), development_docs, similarities))
-print("a")
+print(gen_output(extract_docs("SOUTHERN CO", "0000092122"), development_docs, similarities))
 print(gen_output(extract_docs("NORTHROP GRUMMAN CORP /DE/", "0001133421"), development_docs, similarities))
-print("a")
-#consumer test
+print(gen_output(extract_docs("Workday, Inc.", "0001327811"), development_docs, similarities))
 print(gen_output(extract_docs("HTIFFANY & CO", "0000098246"), development_docs, similarities))
-print("a")
 print(gen_output(extract_docs("Macy's, Inc.", "0000794367"), development_docs, similarities))
-print("a")
-
-
+"""
 print("b")
 
 
