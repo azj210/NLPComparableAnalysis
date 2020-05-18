@@ -1,5 +1,3 @@
-from __future__ import division
-import string
 import math
 import edgar
 import re
@@ -7,8 +5,6 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
-from sklearn.feature_extraction.text import TfidfVectorizer
-import numpy as np
 import copy
 
 #Obtaining SEC docs
@@ -127,7 +123,7 @@ sim_list = list(similarities.keys())
 #6 sectors total
 #8 docs in each sector 
 def generate_cosine_similarities(doc,development_docs,similarity):
-  #test, change all run_docs back to development docs
+    #test, change all run_docs back to development docs
     run_docs = copy.deepcopy(development_docs)
     simCopy = copy.deepcopy(similarity)
     finalized_doc = finalize_doc(doc)
