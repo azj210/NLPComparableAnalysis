@@ -6,6 +6,9 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
 import copy
+import json
+import csv
+from collections import defaultdict
 
 #Obtaining SEC docs
 def extract_docs(comp_name,cik):
@@ -53,15 +56,15 @@ def finalize_doc(doc):
 
 
 #training set
-it_documents = [finalize_doc(extract_docs("APPLE INC", "0000320193")),finalize_doc(extract_docs("MICROSOFT CORPORATION", "0000789019")),finalize_doc(extract_docs("INTERNATIONAL BUSINESS MACHINES CORP", "0000051143")),finalize_doc(extract_docs("Oracle Corp", "0001341439")),finalize_doc(extract_docs("INTERNATIONAL BUSINESS MACHINES CORP", "0000051143"))]
-bio_documents = [finalize_doc(extract_docs("PFIZER INC", "0000078003")),finalize_doc(extract_docs("JOHNSON & JOHNSON", "0000200406")),finalize_doc(extract_docs("Biogen Inc.", "0000875045")),finalize_doc(extract_docs("MERCK & CO., INC.", "0000310158")),finalize_doc(extract_docs("BAXTER INTERNATIONAL INC", "0000010456"))]
-finance_documents = [finalize_doc(extract_docs("CITIGROUP INC", "0000831001")),finalize_doc(extract_docs("GOLDMAN SACHS GROUP INC", "0000886982")),finalize_doc(extract_docs("WELLS FARGO & COMPANY", "0000072971")),finalize_doc(extract_docs("BlackRock Inc.", "0001364742")),finalize_doc(extract_docs("AMERICAN INTERNATIONAL GROUP Inc", "0000005272"))]
-energy_documents = [finalize_doc(extract_docs("EXXON MOBIL CORP", "0000034088")),finalize_doc(extract_docs("CHEVRON CORP", "0000093410")),finalize_doc(extract_docs("ENTERPRISE PRODUCTS PARTNERS L P", "0001061219")),finalize_doc(extract_docs("Phillips 66", "0001534701")),finalize_doc(extract_docs("DEVON ENERGY CORP/DE", "0001090012"))]
-consumerdisc_documents = [finalize_doc(extract_docs("STARBUCKS CORP", "0000829224")),finalize_doc(extract_docs("Target Corp", "0000027419")),finalize_doc(extract_docs("Marriott International Inc", "0001048286")),finalize_doc(extract_docs("CHIPOTLE MEXICAN GRILL", "0001058090")),finalize_doc(extract_docs("NORDSTROM INC", "0000072333"))]
-manufacturing_documents = [finalize_doc(extract_docs("General Motors Co", "0001467858")),finalize_doc(extract_docs("LOCKHEED MARTIN CORP", "0000936468")),finalize_doc(extract_docs("CATERPILLAR INC", "0000018230")),finalize_doc(extract_docs("FORD MOTOR CO", "0000037996")),finalize_doc(extract_docs("RELIANCE STEEL & ALUMINUM CO", "0000861884"))]
-
+sectors = 6
+trainSet = defaultdict(list)
+with open("train.json") as json_file:
+    data = json.load(json_file)
+    for i in data:
+    	trainSet[i["sector"]].append(finalize_doc(extract_docs(i["id"], i["cik"])))
 
 tokenize = lambda doc: doc.lower().split(" ")
+
 
 def jaccard_similarity(query, document):
 	intersection = set(query).intersection(set(document))
@@ -106,14 +109,14 @@ def cosine_similarity(vector1, vector2):
 
 
 #development set
-it_Dev = [finalize_doc(extract_docs("FACEBOOK INC","0001326801")), finalize_doc(extract_docs("INTEL CORP", "0000050863")), finalize_doc(extract_docs("CISCO SYSTEMS", "0000858877"))]
-bio_Dev = [finalize_doc(extract_docs("LILLY ELI & CO", "0000059478")), finalize_doc(extract_docs("AbbVie Inc.", "0001551152")), finalize_doc(extract_docs("THERMO FISHER SCIENTIFIC INC.", "0000097745"))]
-finance_Dev = [finalize_doc(extract_docs("SVB FINANCIAL GROUP", "0000719739")),  finalize_doc(extract_docs("JPMORGAN CHASE & CO", "0000019617")), finalize_doc(extract_docs("BANK OF AMERICA CORP /DE/", "0000070858"))]
-energy_Dev = [finalize_doc(extract_docs("VALERO ENERGY CORP/TX", "0001035002")), finalize_doc(extract_docs("EOG RESOURCES INC", "0000821189")), finalize_doc(extract_docs("OCCIDENTAL PETROLEUM CORP /DE/", "0000797468"))]
-consumerdisc_Dev = [finalize_doc(extract_docs("NIKE INC", "0000320187")), finalize_doc(extract_docs("TJX COMPANIES INC /DE/", "0000109198")), finalize_doc(extract_docs("MCDONALDS CORP", "0000063908"))]      
-manufacturing_Dev = [finalize_doc(extract_docs("BOEING CO", "0000012927")), finalize_doc(extract_docs("GOODYEAR TIRE & RUBBER CO /OH/", "0000042582")) ,finalize_doc(extract_docs("LEAR CORP", "0000842162"))]
-
-development_docs = [it_documents + it_Dev, bio_documents + bio_Dev, finance_documents + finance_Dev, energy_documents + energy_Dev, consumerdisc_documents + consumerdisc_Dev, manufacturing_documents + manufacturing_Dev]
+devSet = defaultdict(list)
+with open("develop.json") as json_file:
+    data = json.load(json_file)
+    for i in data:
+    	devSet[i["sector"]].append(finalize_doc(extract_docs(i["id"], i["cik"])))
+development_docs = []
+for i in trainSet.keys():
+	development_docs.append(trainSet[i] + devSet[i])
 docsPerSector = len(development_docs[0])
 
 similarities = {"technology":[],"biopharmaceuticals":[],"finance":[],"energy":[],"consumer_discretionary":[], "manufacturing":[]}
@@ -158,27 +161,12 @@ def gen_output(td,d,s):
 	print(sim)
 	return(sector_ranking(sim))
 
+
 #test set
-"""
-print(gen_output(extract_docs("Booking Holdings Inc.", "0001075531"), development_docs, similarities))
-print(gen_output(extract_docs("AMAZON COM INC", "0001018724"), development_docs, similarities))
-print(gen_output(extract_docs("ADOBE INC.", "0000796343"), development_docs, similarities))
-print(gen_output(extract_docs("Tesla, Inc.", "0001318605"), development_docs, similarities))
-print(gen_output(extract_docs("Q2 Holdings, Inc.", "0001410384"), development_docs, similarities))
-print(gen_output(extract_docs("MCKESSON CORP", "0000927653"), development_docs, similarities))
-print(gen_output(extract_docs("Cellular Biomedicine Group, Inc.", "0001378624"), development_docs, similarities))
-print(gen_output(extract_docs("AMERICAN EXPRESS CO", "0000004962"), development_docs, similarities))
-print(gen_output(extract_docs("MORGAN STANLEY", "0000895421"), development_docs, similarities))
-print(gen_output(extract_docs("HESS CORP", "0000004447"), development_docs, similarities))
-print(gen_output(extract_docs("SOUTHERN CO", "0000092122"), development_docs, similarities))
-print(gen_output(extract_docs("NORTHROP GRUMMAN CORP /DE/", "0001133421"), development_docs, similarities))
-print(gen_output(extract_docs("Workday, Inc.", "0001327811"), development_docs, similarities))
-print(gen_output(extract_docs("PayPal Holdings, Inc.", "0001633917"), development_docs, similarities))
-print(gen_output(extract_docs("Mastercard Inc", "0001141391"), development_docs, similarities))
-print(gen_output(extract_docs("BLACKLINE, INC.", "0001666134"), development_docs, similarities))
-print(gen_output(extract_docs("HTIFFANY & CO", "0000098246"), development_docs, similarities))
-print(gen_output(extract_docs("Macy's, Inc.", "0000794367"), development_docs, similarities))
-print(gen_output(extract_docs("Blackstone Group Inc", "0001393818"), development_docs, similarities))
-print(gen_output(extract_docs("Catalent, Inc.", "0001596783"), development_docs, similarities))
-"""
+with open("test.csv") as csvF:
+    r = csv.reader(csvF, delimiter=',')
+    for row in r:
+        print(row[0])
+        print(gen_output(extract_docs(row[0], row[1]), development_docs, similarities))
+            
 
