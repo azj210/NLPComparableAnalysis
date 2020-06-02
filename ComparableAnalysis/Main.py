@@ -54,17 +54,6 @@ def finalize_doc(doc):
 	#part2 = stem_words(part1, stemmer)
 	return part2
 
-"""
-#training set
-sectors = 6
-trainSet = defaultdict(list)
-with open("train.json") as json_file:
-    data = json.load(json_file)
-    for i in data:
-    	trainSet[i["sector"]].append(finalize_doc(extract_docs(i["id"], i["cik"])))
-
-tokenize = lambda doc: doc.lower().split(" ")
-"""
 
 def jaccard_similarity(query, document):
 	intersection = set(query).intersection(set(document))
@@ -107,21 +96,6 @@ def cosine_similarity(vector1, vector2):
 		return 0
 	return dot_product/magnitude
 
-"""
-#development set
-devSet = defaultdict(list)
-with open("develop.json") as json_file:
-    data = json.load(json_file)
-    for i in data:
-    	devSet[i["sector"]].append(finalize_doc(extract_docs(i["id"], i["cik"])))
-development_docs = []
-for i in trainSet.keys():
-	development_docs.append(trainSet[i] + devSet[i])
-docsPerSector = len(development_docs[0])
-
-similarities = {"technology":[],"biopharmaceuticals":[],"finance":[],"energy":[],"consumer_discretionary":[], "manufacturing":[]}
-sim_list = list(similarities.keys())
-"""
 
 #6 sectors total
 #8 docs in each sector 
